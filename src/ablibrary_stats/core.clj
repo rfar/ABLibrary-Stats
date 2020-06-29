@@ -7,26 +7,26 @@
 
 (defn find-smallest-pdf []
   (->> (api/fetch-book-sizes)
-       (filter #(not= (get % :pdf_size) 0))
-       (apply min-key #(get % :pdf_size))))
+       (remove (comp zero? :pdf_size))
+       (apply min-key :pdf_size)))
 
 (defn sort-pdfs-by-size []
   (->> (api/fetch-book-sizes)
-       (filter #(not= (get % :pdf_size) 0))
-       (sort-by #(get % :pdf_size))
+       (remove (comp zero? :pdf_size))
+       (sort-by :pdf_size)
        (take 5)))
 
 (defn get-unique-field-values [field num]
   (->> (api/fetch-book-info-fields [:id field])
-       (filter #(not (str/blank? (str/trim (get % field "")))))
+       (remove (comp str/blank? str/trim str #(get % field "")))
        (take num)))
 
 (defn report-books-text-pdf-count []
   (let [books-info (api/fetch-book-info-fields [:id :has_text :attachment :verified])
         total-count (count books-info)
-        with-pdf-count (count (filter #(get % :attachment) books-info))
-        without-text-count (count (filter #(not (get % :has_text)) books-info))
-        not-verified-count (count (filter #(not (get % :verified)) books-info))]
+        with-pdf-count (count (filter :attachment books-info))
+        without-text-count (count (remove :has_text books-info))
+        not-verified-count (count (remove :verified books-info))]
     ;; (println "Books count:" total-count)
     (printf "Not verified Books: %5d (%.2f%%)\n" not-verified-count (* 100 (float (/ not-verified-count total-count))))
     (printf "Books with PDF: \t%5d (%.2f%%)\n" with-pdf-count (* 100 (float (/ with-pdf-count total-count))))
