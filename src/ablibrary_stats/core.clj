@@ -27,7 +27,7 @@
         with-pdf-count (count (filter :attachment books-info))
         without-text-count (count (remove :has_text books-info))
         not-verified-count (count (remove :verified books-info))]
-    ;; (println "Books count:" total-count)
+    (println "Books count:" total-count)
     (printf "Not verified Books: %5d (%.2f%%)\n" not-verified-count (* 100 (float (/ not-verified-count total-count))))
     (printf "Books with PDF: \t%5d (%.2f%%)\n" with-pdf-count (* 100 (float (/ with-pdf-count total-count))))
     (printf "Books without Text: %5d (%.2f%%)\n" without-text-count (* 100 (float (/ without-text-count total-count))))))

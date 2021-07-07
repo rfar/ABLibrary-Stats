@@ -24,9 +24,9 @@
 (defn fetch-field-unique-vals [field]
   (->>
    (fetch-book-info-fields [field])
-   (set)
+   set
    (map field)
-   (sort)))
+   sort))
 
 ;;--------------------------------------------
 (defn find-books-with-field-value [field val]
@@ -34,4 +34,4 @@
    (fetch-book-info-fields [:id field])
    (filter #(= (str/trim (get % field)) val))
    (map :id)
-   (sort)))
+   sort))
