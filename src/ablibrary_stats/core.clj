@@ -17,8 +17,11 @@
        (take 5)))
 
 (defn get-unique-field-values [field num]
-  (->> (api/fetch-book-info-fields [:id field])
-       (remove (comp str/blank? str/trim str #(get % field "")))
+  (->> (api/fetch-book-info-fields [field])
+       (map #(get % field ""))
+       (map str/trim)
+       (remove str/blank?)
+       (set)
        (take num)))
 
 (defn report-books-text-pdf-count []
@@ -55,3 +58,6 @@
 (ablibrary-stats.core/find-smallest-pdf)
 (ablibrary-stats.core/sort-pdfs-by-size)
 (ablibrary-stats.core/print-books-stats)
+
+;; Non-digit book volumes are as below:
+(remove #(re-matches #"\d+" %) (get-unique-field-values :volume 1000))
